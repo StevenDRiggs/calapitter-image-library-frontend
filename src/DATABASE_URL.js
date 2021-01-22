@@ -1,4 +1,4 @@
-const DATABASE_URL = 'http://localhost:8080'
+const DATABASE_URL = 'https://cil-backend.herokuapp.com/'
 
 
 export default DATABASE_URL
