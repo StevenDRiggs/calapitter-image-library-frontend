@@ -1,16 +1,51 @@
-html,
-body {
+* {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  box-sizing: border-box;
+}
+
+html {
+  background: radial-gradient(#fafad2, #9acd32);
 }
 
 a {
-  color: inherit;
+  cursor: pointer;
   text-decoration: none;
 }
 
-* {
-  box-sizing: border-box;
+.pageFooter {
+  width: 100%;
+  height: 100px;
+  border-top: 1px solid #eaeaea;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
 }
+
+.vercelLogo {
+  height: 1em;
+}
+
+.mainDisplay {
+    display: flex;
+    margin: 15% auto;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 40%;
+}
+
+.errors {
+  position: fixed;
+  top: 15vh;
+  text-align: center;
+  background-color: #a00;
+}
+
+.errors ul {
+  list-style: disc inside;
+}
+
