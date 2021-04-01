@@ -2,10 +2,17 @@ import Head from 'next/head'
 import React, { Component } from 'react'
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
 
-//import Chrysalis from '../images/logoReact.svg'
 import { bounceIn } from '../animations/scripts/caterpillar'
+import SignupForm from '../components/signup_form'
+import LoginForm from '../components/login_form'
 
 import styles from '../styles/Home.module.css'
+
+
+const initialState = {
+  signup: false,
+  login: false,
+}
 
 
 class Home extends Component {
@@ -68,18 +75,44 @@ class Home extends Component {
       </g>
     </svg>
 
-    componentDidMount() {
-      const targetElement = document.querySelector('#SVGs')
-      disableBodyScroll(targetElement)
+  state = {
+    ...initialState,
+  }
 
-      bounceIn()
-    }
+  cancelButton = () => {
+    this.setState({
+      ...initialState,
+    })
+  }
+
+  showSignupForm = () => {
+    this.setState({
+      signup: true,
+      login: false,
+    })
+  }
+
+  showLoginForm = () => {
+    this.setState({
+      login: true,
+      signup: false,
+    })
+  }
+
+  componentDidMount() {
+    const targetElement = document.querySelector('#SVGs')
+    disableBodyScroll(targetElement)
+
+    bounceIn()
+  }
 
   componentWillUnmount() {
     clearAllBodyScrollLocks()
   }
 
   render() {
+    const { signup, login } = this.state
+
     return (
       <div>
         <Head>
@@ -93,13 +126,20 @@ class Home extends Component {
 
         <main>
           <div id='SVGs'>
-            {/* <div className={styles.chrysalisSVG}> */}
-            {/*   <Chrysalis id='chrysalis' /> */}
-            {/* </div> */}
             <div className={styles.caterpillarSVG}>
               {this.caterpillar}
             </div>
           </div>
+
+          {!(signup || login) ?
+            <>
+              <button id="signupBtn" onClick={this.showSignupForm}>Sign Up</button>
+              <button id="loginBtn" onClick={this.showLoginForm}>Log In</button>
+            </>
+          : null}
+
+          {signup ? <SignupForm cancelButton={this.cancelButton} styles={styles} /> : null}
+          {login ? <LoginForm cancelButton={this.cancelButton} styles={styles} /> : null}
         </main>
       </div>
     )

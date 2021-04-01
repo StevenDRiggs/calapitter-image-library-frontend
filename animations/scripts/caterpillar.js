@@ -5,6 +5,8 @@ const bounceIn = () => {
   const tl = gsap.timeline({id: 'bounceIn'})
 
   tl.addLabel('prep')
+    .to('#signupBtn', {opacity: 0, disabled: true, duration: 0}, 'prep')
+    .to('#loginBtn', {opacity: 0, disabled: true, duration: 0}, 'prep')
     .to('#head-face', {opacity: 0, duration: 0}, 'prep')
     .to('#head-antennae', {opacity: 0, duration: 0}, 'prep')
     .to('#body1-legs', {opacity: 0, duration: 0}, 'prep')
@@ -41,7 +43,10 @@ const bounceIn = () => {
     .to('#head-antennae', {y: 25, duration: 0}, 'fadeIn+=1')
     .to('#head-antennae', {opacity: 1, y: 0, duration: 0.3}, 'fadeIn+=1.1')
     .to('#head-face-mouth', {opacity: 1, duration: 1}, 'fadeIn+=1.6')
-    .then(blink())
+    .then(() => {
+      blink()
+      afterAnim()
+    })
 }
 
 const blink = () => {
@@ -51,6 +56,14 @@ const blink = () => {
     .to('#eyes-clip-path', {y: 0, duration: 0.1})
 
   tl.repeatDelay(1.8)
+}
+
+const afterAnim = () => {
+  const tl = gsap.timeline({id: 'afterAnim'})
+
+  tl.to('#SVGs div', {position: 'static', width: 300})
+    .to('#signupBtn', {opacity: 1, disabled: false})
+    .to('#loginBtn', {opacity: 1, disabled: false})
 }
 
 
