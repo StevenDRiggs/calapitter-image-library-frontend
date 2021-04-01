@@ -23,16 +23,18 @@ class LoginForm extends Component {
   }
 
   render() {
-    const { cancelButton } = this.props
+    const { styles, cancelButton } = this.props
     const { usernameOrEmail, password } = this.state
 
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form className={styles.form} onSubmit={this.handleSubmit}>
         <input type='text' name='usernameOrEmail' value={usernameOrEmail} onChange={this.handleChange} placeholder='Username or Email' />
         <input type='password' name='password' value={password} onChange={this.handleChange} placeholder='Password' />
 
-        <button type='submit'>Log In</button>
-        <button type='button' onClick={cancelButton}>Cancel</button>
+        <br />
+
+        <button type='submit' className={styles.submitButton}>Log In</button>
+        <button type='button' className={styles.cancelButton} onClick={cancelButton}>Cancel</button>
       </form>
     )
   }

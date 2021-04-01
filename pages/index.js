@@ -2,7 +2,7 @@ import Head from 'next/head'
 import React, { Component } from 'react'
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
 
-import { bounceIn } from '../animations/scripts/caterpillar'
+import { bounceIn, skipAnim } from '../animations/scripts/caterpillar'
 import SignupForm from '../components/signup_form'
 import LoginForm from '../components/login_form'
 
@@ -103,6 +103,12 @@ class Home extends Component {
     const targetElement = document.querySelector('#SVGs')
     disableBodyScroll(targetElement)
 
+    document.addEventListener('keydown', ({ keyCode }) => {
+      if (keyCode === 27) {
+        skipAnim()
+      }
+    })
+
     bounceIn()
   }
 
@@ -115,15 +121,6 @@ class Home extends Component {
 
     return (
       <div>
-        <Head>
-          <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-          <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-          <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-          <link rel="manifest" href="/site.webmanifest" />
-          <meta name="msapplication-TileColor" content="#ffffff" />
-          <meta name="theme-color" content="#ffffff" />
-        </Head>
-
         <main>
           <div id='SVGs'>
             <div className={styles.caterpillarSVG}>

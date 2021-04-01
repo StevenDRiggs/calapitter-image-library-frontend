@@ -43,6 +43,7 @@ const bounceIn = () => {
     .to('#head-antennae', {y: 25, duration: 0}, 'fadeIn+=1')
     .to('#head-antennae', {opacity: 1, y: 0, duration: 0.3}, 'fadeIn+=1.1')
     .to('#head-face-mouth', {opacity: 1, duration: 1}, 'fadeIn+=1.6')
+    .addLabel('end')
     .then(() => {
       blink()
       afterAnim()
@@ -66,5 +67,16 @@ const afterAnim = () => {
     .to('#loginBtn', {opacity: 1, disabled: false})
 }
 
+const skipAnim = () => {
+  const anim = gsap.getById('bounceIn') || gsap.getById('fadeIn')
 
-export { bounceIn }
+  anim ? () => {
+    anim.seek('end')
+    anim.play()
+  }: null
+
+  afterAnim()
+}
+
+
+export { bounceIn, skipAnim }

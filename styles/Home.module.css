@@ -5,4 +5,23 @@
   width: 60vw;
 }
 
+.form * {
+  color: #555;
+}
 
+.submitButton {
+  background-color: #06e;
+  color: #bbb;
+  padding: 0.5rem;
+}
+
+.cancelButton {
+  background-color: #500;
+  color: #aaa;
+  padding: 0.5rem;
+}
+
+.inputDanger {
+  box-sizing: content-box;
+  border: 2px red solid;
+}
