@@ -9,5 +9,16 @@ const processErrors = errorsArr => {
   }
 }
 
+const clearErrors = () => {
+  return dispatch => {
+    dispatch({
+      type: 'CLEAR_ERRORS',
+      payload: {
+        errors: [],
+      }
+    })
+  }
+}
 
-export { processErrors }
+
+export { processErrors, clearErrors }

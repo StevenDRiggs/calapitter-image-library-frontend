@@ -2,13 +2,16 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { processErrors } from '../redux/actions/errorActions'
+import { signupUser } from '../redux/actions/userActions'
 
 
 const initialState = {
-  username: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
+  user: {
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  }
 }
 
 
@@ -20,14 +23,25 @@ class SignupForm extends Component {
   handleSubmit = event => {
     event.preventDefault()
 
-    const { password, confirmPassword } = this.state
-    const { processErrors } = this.props
+    const { user } = this.state
+    const { username, email, password, confirmPassword } = user
+    const { processErrors, signupUser } = this.props
 
     if (password !== confirmPassword) {
       processErrors(['Passwords must be the same'])
     } else {
-      
+      signupUser({
+        user: {
+          username,
+          email,
+          password,
+        }
+      })
     }
+
+    this.setState({
+      ...initialState,
+    })
   }
 
   handleChange = event => {
@@ -35,7 +49,7 @@ class SignupForm extends Component {
 
     this.setState(prevState => {
       if (event.target.name === 'confirmPassword') {
-        if (event.target.value !== prevState.password) {
+        if (event.target.value !== prevState.user.password) {
           event.target.className = styles.inputDanger
         } else {
           event.target.className = ''
@@ -43,14 +57,18 @@ class SignupForm extends Component {
       }
 
       return {
-        [event.target.name]: event.target.value,
+        user: {
+          ...prevState.user,
+          [event.target.name]: event.target.value,
+        }
       }
     })
   }
 
   render() {
     const { styles, cancelButton } = this.props
-    const { username, email, password, confirmPassword } = this.state
+    const { user } = this.state
+    const { username, email, password, confirmPassword } = user
 
     return (
       <form className={styles.form} onSubmit={this.handleSubmit}>
@@ -72,6 +90,7 @@ class SignupForm extends Component {
 const mapDispatchToProps = dispatch => {
   return {
     processErrors: errorsArr => dispatch(processErrors(errorsArr)),
+    signupUser: formData => dispatch(signupUser(formData)),
   }
 }
 

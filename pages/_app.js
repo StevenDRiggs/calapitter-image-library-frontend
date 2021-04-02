@@ -1,21 +1,16 @@
 import Head from 'next/head'
 
-import { storeWrapper, store } from '../redux/store/store'
+import { storeWrapper } from '../redux/store/store'
 
 import '../styles/globals.css'
 
 
 const App = ({ Component, pageProps}) => {
-  const { errors } = store.getState()
-  console.log(errors)
-
   return (
     <>
       <Head>
         <title>CIL | Calapitter Image Library</title>
       </Head>
-
-      {errors && errors.length > 0 ? <div className='errors'><ul>{errors.map((error, index) => <li key={index}>{error}</li>)}</ul></div> : null}
 
       <div className='mainDisplay'>
         <Component {...pageProps} />

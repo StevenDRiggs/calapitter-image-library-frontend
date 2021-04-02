@@ -1,5 +1,8 @@
 import Head from 'next/head'
+import { withRouter } from 'next/router'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { clearErrors } from '../redux/actions/errorActions'
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
 
 import { bounceIn, skipAnim } from '../animations/scripts/caterpillar'
@@ -75,17 +78,25 @@ class Home extends Component {
       </g>
     </svg>
 
-  state = {
-    ...initialState,
-  }
+    state = {
+      ...initialState,
+    }
 
   cancelButton = () => {
+    const { clearErrors } = this.props
+
+    clearErrors()
+
     this.setState({
       ...initialState,
     })
   }
 
   showSignupForm = () => {
+    const { clearErrors } = this.props
+
+    clearErrors()
+
     this.setState({
       signup: true,
       login: false,
@@ -93,6 +104,10 @@ class Home extends Component {
   }
 
   showLoginForm = () => {
+    const { clearErrors } = this.props
+
+    clearErrors()
+
     this.setState({
       login: true,
       signup: false,
@@ -118,30 +133,52 @@ class Home extends Component {
 
   render() {
     const { signup, login } = this.state
+    const { errors, router, user } = this.props
 
-    return (
-      <div>
-        <main>
-          <div id='SVGs'>
-            <div className={styles.caterpillarSVG}>
-              {this.caterpillar}
+    if (Object.keys(user).length > 0) {
+      router.push('/cil/profile')
+      return null
+    } else {
+      return (
+        <div>
+          {errors && errors.length > 0 ? <div className='errors'><ul>{errors.map((error, index) => <li key={index}>{error}</li>)}</ul></div> : null}
+
+          <main>
+            <div id='SVGs'>
+              <div className={styles.caterpillarSVG}>
+                {this.caterpillar}
+              </div>
             </div>
-          </div>
 
-          {!(signup || login) ?
-            <>
-              <button id="signupBtn" onClick={this.showSignupForm}>Sign Up</button>
-              <button id="loginBtn" onClick={this.showLoginForm}>Log In</button>
-            </>
-          : null}
+            {!(signup || login) ?
+              <>
+                <button id="signupBtn" onClick={this.showSignupForm}>Sign Up</button>
+                <button id="loginBtn" onClick={this.showLoginForm}>Log In</button>
+              </>
+              : null}
 
-          {signup ? <SignupForm cancelButton={this.cancelButton} styles={styles} /> : null}
-          {login ? <LoginForm cancelButton={this.cancelButton} styles={styles} /> : null}
-        </main>
-      </div>
-    )
+            {signup ? <SignupForm cancelButton={this.cancelButton} styles={styles} /> : null}
+            {login ? <LoginForm cancelButton={this.cancelButton} styles={styles} /> : null}
+          </main>
+        </div>
+      )
+    }
   }
 }
 
 
-export default Home
+const mapStateToProps = state => {
+  return {
+    errors: state.errors,
+    user: state.user,
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    clearErrors: () => dispatch(clearErrors()),
+  }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Home))

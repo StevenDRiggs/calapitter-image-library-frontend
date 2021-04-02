@@ -60,12 +60,12 @@ export const signupUser = signupFormData => {
       body: JSON.stringify(signupFormData)
     })
       .then(response => response.json())
-      .then(({user, token }) => {
-        if (user.errors) {
+      .then(({ user, token, errors }) => {
+        if (errors) {
           dispatch({
             type: 'PROCESS_ERRORS',
             payload: {
-              errors: user.errors,
+              errors,
             },
           })
         } else {
