@@ -1,9 +1,14 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+
+import { loginUser } from '../redux/actions/userActions'
 
 
 const initialState = {
-  usernameOrEmail: '',
-  password: '',
+  user: {
+    usernameOrEmail: '',
+    password: '',
+  }
 }
 
 
@@ -14,17 +19,31 @@ class LoginForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault()
+
+    const { loginUser } = this.props
+
+    loginUser(this.state)
+
+    this.setState({
+      ...initialState,
+    })
   }
 
   handleChange = event => {
-    this.setState({
-      [event.target.name]: event.target.value,
+    this.setState(prevState => {
+      return {
+        user: {
+          ...prevState.user,
+          [event.target.name]: event.target.value,
+        }
+      }
     })
   }
 
   render() {
     const { styles, cancelButton } = this.props
-    const { usernameOrEmail, password } = this.state
+    const { user } = this.state
+    const { usernameOrEmail, password } = user
 
     return (
       <form className={styles.form} onSubmit={this.handleSubmit}>
@@ -41,5 +60,12 @@ class LoginForm extends Component {
 }
 
 
-export default LoginForm
+const mapDispatchToProps = dispatch => {
+  return {
+    loginUser: formData => dispatch(loginUser(formData)),
+  }
+}
+
+
+export default connect(null, mapDispatchToProps)(LoginForm)
 
