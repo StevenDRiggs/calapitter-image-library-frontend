@@ -11,7 +11,7 @@ const usersReducer = (state={}, action) => {
         token: action.token,
       }
     case 'LOGOUT_USER':
-      return null
+      return {}
     case 'SIGNUP_USER':
       return {
         user: action.user,
