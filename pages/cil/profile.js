@@ -1,23 +1,26 @@
-import React from 'react'
-import { connect } from 'react-redux'
 import { useRouter } from 'next/router'
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
 
 import { logoutUser } from '../../redux/actions/userActions'
 
 
 const Profile = props => {
   const { user, logoutUser } = props
+
   const router = useRouter()
 
-  if (Object.keys(user).length > 0) {
+  useEffect(() => {
+    if (Object.keys(user).length === 0) {
+      router.push(window.location.origin)
+    }
+  })
+
   return (
     <div>
       <button onClick={logoutUser}>Log Out</button>
     </div>
   )
-  } else {
-    router.push('/')
-  }
 }
 
 
@@ -29,7 +32,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    logoutUser: dispatch(logoutUser()),
+    logoutUser: () => dispatch(logoutUser()),
   }
 }
 

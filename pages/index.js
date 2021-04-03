@@ -101,11 +101,8 @@ const Home = props => {
     const targetElement = document.querySelector('#SVGs')
     disableBodyScroll(targetElement)
 
-    document.addEventListener('keydown', ({ keyCode }) => {
-      if (keyCode === 27) {
-        skipAnim()
-      }
-    })
+    document.addEventListener('keydown', () => skipAnim())
+    document.addEventListener('click', () => skipAnim())
 
     bounceIn()
 
@@ -116,7 +113,7 @@ const Home = props => {
 
   useEffect(() => {
     if (Object.keys(user).length > 0) {
-      window.location.href = `${window.location.origin}/cil/profile`
+      router.push(`${window.location.origin}/cil/profile`)
     }
   }, [user])
 
