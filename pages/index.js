@@ -1,6 +1,6 @@
 import Head from 'next/head'
-import { withRouter } from 'next/router'
-import React, { Component } from 'react'
+import { useRouter } from 'next/router'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { clearErrors } from '../redux/actions/errorActions'
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
@@ -12,14 +12,8 @@ import LoginForm from '../components/login_form'
 import styles from '../styles/Home.module.css'
 
 
-const initialState = {
-  signup: false,
-  login: false,
-}
-
-
-class Home extends Component {
-  caterpillar = 
+const Home = props => {
+  const caterpillar = 
     <svg id="caterpillar" viewBox="0 0 300 300">
       <defs>
         <clipPath id="eyes-clip-path">
@@ -78,43 +72,32 @@ class Home extends Component {
       </g>
     </svg>
 
-    state = {
-      ...initialState,
-    }
+  const [signup, setSignup] = useState(false)
+  const [login, setLogin] = useState(false)
 
-  cancelButton = () => {
-    const { clearErrors } = this.props
+  const { errors, user, clearErrors } = props
 
+  const router = useRouter()
+
+  const cancelButton = () => {
     clearErrors()
-
-    this.setState({
-      ...initialState,
-    })
+    setSignup(false)
+    setLogin(false)
   }
 
-  showSignupForm = () => {
-    const { clearErrors } = this.props
-
+  const showSignupForm = () => {
     clearErrors()
-
-    this.setState({
-      signup: true,
-      login: false,
-    })
+    setSignup(true)
+    setLogin(false)
   }
 
-  showLoginForm = () => {
-    const { clearErrors } = this.props
-
+  const showLoginForm = () => {
     clearErrors()
-
-    this.setState({
-      login: true,
-      signup: false,
-    })
+    setLogin(true)
+    setSignup(false)
   }
 
-  componentDidMount() {
+  useEffect(() => {
     const targetElement = document.querySelector('#SVGs')
     disableBodyScroll(targetElement)
 
@@ -125,44 +108,39 @@ class Home extends Component {
     })
 
     bounceIn()
-  }
 
-  componentWillUnmount() {
-    clearAllBodyScrollLocks()
-  }
-
-  render() {
-    const { signup, login } = this.state
-    const { errors, router, user } = this.props
-
-    if (Object.keys(user).length > 0) {
-      router.push('/cil/profile')
-      return null
-    } else {
-      return (
-        <div>
-          {errors && errors.length > 0 ? <div className='errors'><ul>{errors.map((error, index) => <li key={index}>{error}</li>)}</ul></div> : null}
-
-          <main>
-            <div id='SVGs'>
-              <div className={styles.caterpillarSVG}>
-                {this.caterpillar}
-              </div>
-            </div>
-
-            {!(signup || login) ?
-              <>
-                <button id="signupBtn" onClick={this.showSignupForm}>Sign Up</button>
-                <button id="loginBtn" onClick={this.showLoginForm}>Log In</button>
-              </>
-              : null}
-
-            {signup ? <SignupForm cancelButton={this.cancelButton} styles={styles} /> : null}
-            {login ? <LoginForm cancelButton={this.cancelButton} styles={styles} /> : null}
-          </main>
-        </div>
-      )
+    return () => {
+      clearAllBodyScrollLocks()
     }
+  }, [])
+
+  if (Object.keys(user).length > 0) {
+    router.push('/cil/profile')
+    return null
+  } else {
+    return (
+      <div>
+        {errors && errors.length > 0 ? <div className='errors'><ul>{errors.map((error, index) => <li key={index}>{error}</li>)}</ul></div> : null}
+
+        <main>
+          <div id='SVGs'>
+            <div className={styles.caterpillarSVG}>
+              {caterpillar}
+            </div>
+          </div>
+
+          {!(signup || login) ?
+            <>
+              <button id="signupBtn" onClick={showSignupForm}>Sign Up</button>
+              <button id="loginBtn" onClick={showLoginForm}>Log In</button>
+            </>
+            : null}
+
+          {signup ? <SignupForm cancelButton={cancelButton} styles={styles} /> : null}
+          {login ? <LoginForm cancelButton={cancelButton} styles={styles} /> : null}
+        </main>
+      </div>
+    )
   }
 }
 
@@ -181,4 +159,4 @@ const mapDispatchToProps = dispatch => {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Home))
+export default connect(mapStateToProps, mapDispatchToProps)(Home)
