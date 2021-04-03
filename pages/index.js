@@ -114,34 +114,35 @@ const Home = props => {
     }
   }, [])
 
-  if (Object.keys(user).length > 0) {
-    router.push('/cil/profile')
-    return null
-  } else {
-    return (
-      <div>
-        {errors && errors.length > 0 ? <div className='errors'><ul>{errors.map((error, index) => <li key={index}>{error}</li>)}</ul></div> : null}
+  useEffect(() => {
+    if (Object.keys(user).length > 0) {
+      window.location.href = `${window.location.origin}/cil/profile`
+    }
+  }, [user])
 
-        <main>
-          <div id='SVGs'>
-            <div className={styles.caterpillarSVG}>
-              {caterpillar}
-            </div>
+  return (
+    <div>
+      {errors && errors.length > 0 ? <div className='errors'><ul>{errors.map((error, index) => <li key={index}>{error}</li>)}</ul></div> : null}
+
+      <main>
+        <div id='SVGs'>
+          <div className={styles.caterpillarSVG}>
+            {caterpillar}
           </div>
+        </div>
 
-          {!(signup || login) ?
-            <>
-              <button id="signupBtn" onClick={showSignupForm}>Sign Up</button>
-              <button id="loginBtn" onClick={showLoginForm}>Log In</button>
-            </>
-            : null}
+        {!(signup || login) ?
+          <>
+            <button id="signupBtn" onClick={showSignupForm}>Sign Up</button>
+            <button id="loginBtn" onClick={showLoginForm}>Log In</button>
+          </>
+          : null}
 
-          {signup ? <SignupForm cancelButton={cancelButton} styles={styles} /> : null}
-          {login ? <LoginForm cancelButton={cancelButton} styles={styles} /> : null}
-        </main>
-      </div>
-    )
-  }
+        {signup ? <SignupForm cancelButton={cancelButton} styles={styles} /> : null}
+        {login ? <LoginForm cancelButton={cancelButton} styles={styles} /> : null}
+      </main>
+    </div>
+  )
 }
 
 

@@ -1,62 +1,58 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 
 import { loginUser } from '../redux/actions/userActions'
 
 
 const initialState = {
-  user: {
-    usernameOrEmail: '',
-    password: '',
-  }
+  usernameOrEmail: '',
+  password: '',
 }
 
 
-class LoginForm extends Component {
-  state = {
+const LoginForm = props => {
+  const [ user, setUser ] = useState({
     ...initialState,
-  }
+  })
 
-  handleSubmit = event => {
+  const { loginUser, styles, cancelButton } = props
+  const { usernameOrEmail, password } = user
+
+  const handleSubmit = event => {
     event.preventDefault()
 
-    const { loginUser } = this.props
 
-    loginUser(this.state)
+    loginUser({
+      user,
+    })
 
-    this.setState({
+    setUser({
       ...initialState,
     })
   }
 
-  handleChange = event => {
-    this.setState(prevState => {
+  const handleChange = event => {
+    setUser(prevUser => {
       return {
-        user: {
-          ...prevState.user,
-          [event.target.name]: event.target.value,
-        }
+        ...prevUser,
+        [event.target.name]: event.target.value,
       }
     })
   }
 
-  render() {
-    const { styles, cancelButton } = this.props
-    const { user } = this.state
-    const { usernameOrEmail, password } = user
+  useEffect(() => document.querySelector('#firstInput').focus(), [])
 
-    return (
-      <form className={styles.form} onSubmit={this.handleSubmit}>
-        <input type='text' name='usernameOrEmail' value={usernameOrEmail} onChange={this.handleChange} placeholder='Username or Email' />
-        <input type='password' name='password' value={password} onChange={this.handleChange} placeholder='Password' />
+  return (
+    <form className={styles.form} onSubmit={handleSubmit}>
+      <input type='text' id='firstInput' name='usernameOrEmail' value={usernameOrEmail} onChange={handleChange} placeholder='Username or Email' />
+      <input type='password' name='password' value={password} onChange={handleChange} placeholder='Password' />
 
-        <br />
+      <br />
 
-        <button type='submit' className={styles.submitButton}>Log In</button>
-        <button type='button' className={styles.cancelButton} onClick={cancelButton}>Cancel</button>
-      </form>
-    )
-  }
+      <button type='submit' className={styles.submitButton}>Log In</button>
+      <button type='button' className={styles.cancelButton} onClick={cancelButton}>Cancel</button>
+    </form>
+  )
 }
 
 

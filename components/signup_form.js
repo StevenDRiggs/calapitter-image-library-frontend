@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 
 import { processErrors } from '../redux/actions/errorActions'
@@ -6,26 +6,26 @@ import { signupUser } from '../redux/actions/userActions'
 
 
 const initialState = {
-  user: {
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  }
+  username: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
 }
 
 
-class SignupForm extends Component {
-  state = {
+const SignupForm = props => {
+  const [ user, setUser ] = useState({
     ...initialState,
-  }
+  })
 
-  handleSubmit = event => {
+  const { username, email, password, confirmPassword } = user
+  const { styles, cancelButton } = props
+
+  const handleSubmit = event => {
     event.preventDefault()
 
-    const { user } = this.state
     const { username, email, password, confirmPassword } = user
-    const { processErrors, signupUser } = this.props
+    const { processErrors, signupUser } = props
 
     if (password !== confirmPassword) {
       processErrors(['Passwords must be the same'])
@@ -39,17 +39,16 @@ class SignupForm extends Component {
       })
     }
 
-    this.setState({
+    setUser({
       ...initialState,
     })
   }
 
-  handleChange = event => {
-    const { styles } = this.props
+  const handleChange = event => {
 
-    this.setState(prevState => {
+    setUser(prevUser => {
       if (event.target.name === 'confirmPassword') {
-        if (event.target.value !== prevState.user.password) {
+        if (event.target.value !== prevUser.password) {
           event.target.className = styles.inputDanger
         } else {
           event.target.className = ''
@@ -57,33 +56,27 @@ class SignupForm extends Component {
       }
 
       return {
-        user: {
-          ...prevState.user,
-          [event.target.name]: event.target.value,
-        }
+        ...prevUser,
+        [event.target.name]: event.target.value,
       }
     })
   }
 
-  render() {
-    const { styles, cancelButton } = this.props
-    const { user } = this.state
-    const { username, email, password, confirmPassword } = user
+  useEffect(() => document.querySelector('#firstInput').focus(), [])
 
-    return (
-      <form className={styles.form} onSubmit={this.handleSubmit}>
-        <input type='text' name='username' value={username} onChange={this.handleChange} placeholder='Username' required />
-        <input type='email' name='email' value={email} onChange={this.handleChange} placeholder='Email' required />
-        <input type='password' name='password' value={password} onChange={this.handleChange} placeholder='Password' required />
-        <input type='password' name='confirmPassword' value={confirmPassword} onChange={this.handleChange} placeholder='Confirm Password' required />
+  return (
+    <form id='signupForm' className={styles.form} onSubmit={handleSubmit}>
+      <input type='text' id='firstInput' name='username' value={username} onChange={handleChange} placeholder='Username' required />
+      <input type='email' name='email' value={email} onChange={handleChange} placeholder='Email' required />
+      <input type='password' name='password' value={password} onChange={handleChange} placeholder='Password' required />
+      <input type='password' name='confirmPassword' value={confirmPassword} onChange={handleChange} placeholder='Confirm Password' required />
 
-        <br />
+      <br />
 
-        <button type='submit' className={styles.submitButton}>Sign Up</button>
-        <button type='button' className={styles.cancelButton} onClick={cancelButton}>Cancel</button>
-      </form>
-    )
-  }
+      <button type='submit' className={styles.submitButton}>Sign Up</button>
+      <button type='button' className={styles.cancelButton} onClick={cancelButton}>Cancel</button>
+    </form>
+  )
 }
 
 
