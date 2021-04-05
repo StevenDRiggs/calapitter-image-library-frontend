@@ -22,7 +22,7 @@ const Profile = props => {
   return (
     <div>
       {user.user ? console.log('typeof avatar:', typeof user.user.avatar) : null}
-      {user.user ? <JSXParser jsx={user.user.avatar} /> : null}
+      {/* {user.user ? <JSXParser jsx={user.user.avatar} /> : null} */}
       <button onClick={logoutUser}>Log Out</button>
     </div>
   )
